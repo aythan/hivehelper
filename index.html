@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HiveHelper</title>
+  <meta name="viewport" content="width=device-width, initial-scale=0.8">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    .roster {
+      border: 2px solid black;
+      padding: 10px;
+      margin-right: 10px;
+      min-height: 200px;
+    }
+    .unit-card {
+      border: 2px solid gray;
+      background-color: #f5f5f5;
+      padding: 10px;
+      margin-bottom: 10px;
+      cursor: move;
+    }
+    .delete-button {
+      cursor: pointer;
+    }
+    .export-container {
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .export-textarea {
+      width: 100%;
+      height: 200px;
+    }
+    .close-button {
+      cursor: pointer;
+      color: black;
+      font-size: large;
+      float: left;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hive Helper</h1>
+  <div class="export-container" style="display: none;">
+    <textarea id="exportTextarea" class="export-textarea" readonly></textarea>
+    <span class="close-button" onclick="closeExportRoster()">X</span>
+  </div>
+
+  <button onclick="exportRoster()">Export Roster</button>
+  <div class="roster" id="roster">
+    <h2>Roster</h2>
+  </div>
+
+  <p id="totalPoints">Total Points: 0</p>
+
+  <div>
+    <br><label for="filter">Filter:</label>
+    <input type="text" id="filter" oninput="filterUnitCards()" placeholder="Enter a search term">
+    <button onclick="clearFilterInput()">X</button>
+  </div><br>
+
+  <div class="unit-card" id="unitCard1" draggable="false" ondragstart="drag(event)" data-name="Barbgaunts 5" data-points="50">
+    <b>Barbgaunts 5 - 50pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Barbgaunts 5', 50)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard2" draggable="false" ondragstart="drag(event)" data-name="Barbgaunts 10" data-points="100">
+    <b>Barbgaunts 10 - 100pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Barbgaunts 10', 100)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard3" draggable="false" ondragstart="drag(event)" data-name="Biovores 1" data-points="40">
+    <b>Biovores 1 - 40pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Biovores 1', 40)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard4" draggable="false" ondragstart="drag(event)" data-name="Biovores 2" data-points="80">
+    <b>Biovores 2 - 80pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Biovores 2', 80)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard5" draggable="false" ondragstart="drag(event)" data-name="Biovores 3" data-points="120">
+    <b>Biovores 3 - 120pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Biovores 3', 120)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard6" draggable="false" ondragstart="drag(event)" data-name="Broodlord 1" data-points="100">
+    <b>Broodlord 1 - 100pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Broodlord 1', 100)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard7" draggable="false" ondragstart="drag(event)" data-name="Carnifexes 1" data-points="125">
+    <b>Carnifexes 1 - 125pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Carnifexes 1', 125)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard8" draggable="false" ondragstart="drag(event)" data-name="Carnifexes 2" data-points="250">
+    <b>Carnifexes 2 - 250pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Carnifexes 2', 250)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard9" draggable="false" ondragstart="drag(event)" data-name="Deathleaper 1" data-points="80">
+    <b>Deathleaper 1 - 80pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Deathleaper 1', 80)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard10" draggable="false" ondragstart="drag(event)" data-name="Exocrine 1" data-points="135">
+    <b>Exocrine 1 - 135pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Exocrine 1', 135)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard11" draggable="false" ondragstart="drag(event)" data-name="Gargoyles 10" data-points="75">
+    <b>Gargoyles 10 - 75pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Gargoyles 10', 75)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard12" draggable="false" ondragstart="drag(event)" data-name="Gargoyles 20" data-points="150">
+    <b>Gargoyles 20 - 150pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Gargoyles 20', 150)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard13" draggable="false" ondragstart="drag(event)" data-name="Genestealers 5" data-points="90">
+    <b>Genestealers 5 - 90pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Genestealers 5', 90)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard14" draggable="false" ondragstart="drag(event)" data-name="Genestealers 10" data-points="180">
+    <b>Genestealers 10 - 180pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Genestealers 10', 180)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard15" draggable="false" ondragstart="drag(event)" data-name="Harpy 1" data-points="170">
+    <b>Harpy 1 - 170pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Harpy 1', 170)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard16" draggable="false" ondragstart="drag(event)" data-name="Haruspex 1" data-points="125">
+    <b>Haruspex 1 - 125pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Haruspex 1', 125)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard17" draggable="false" ondragstart="drag(event)" data-name="Hive Crone 1" data-points="200">
+    <b>Hive Crone 1 - 200pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Hive Crone 1', 200)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard18" draggable="false" ondragstart="drag(event)" data-name="Hive Guard 3" data-points="100">
+    <b>Hive Guard 3 - 100pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Hive Guard 3', 100)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard19" draggable="false" ondragstart="drag(event)" data-name="Hive Guard 6" data-points="200">
+    <b>Hive Guard 6 - 200pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Hive Guard 6', 200)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard20" draggable="false" ondragstart="drag(event)" data-name="Hive Tyrant 1" data-points="220">
+    <b>Hive Tyrant 1 - 220pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Hive Tyrant 1', 220)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard21" draggable="false" ondragstart="drag(event)" data-name="Hormagaunts 10" data-points="70">
+    <b>Hormagaunts 10 - 70pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Hormagaunts 10', 70)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard22" draggable="false" ondragstart="drag(event)" data-name="Hormagaunts 20" data-points="140">
+    <b>Hormagaunts 20 - 140pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Hormagaunts 20', 140)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard23" draggable="false" ondragstart="drag(event)" data-name="Lictor 1" data-points="75">
+    <b>Lictor 1 - 75pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Lictor 1', 75)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard24" draggable="false" ondragstart="drag(event)" data-name="Maleceptor 1" data-points="165">
+    <b>Maleceptor 1 - 165pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Maleceptor 1', 165)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard26" draggable="false" ondragstart="drag(event)" data-name="Mawloc  1" data-points="145">
+    <b>Mawloc  1 - 145pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Mawloc  1', 145)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard27" draggable="false" ondragstart="drag(event)" data-name="Mucolid Spores  1" data-points="45">
+    <b>Mucolid Spores  1 - 45pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Mucolid Spores  1', 45)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard28" draggable="false" ondragstart="drag(event)" data-name="Mucolid Spores  2" data-points="90">
+    <b>Mucolid Spores  2 - 90pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Mucolid Spores  2', 90)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard29" draggable="false" ondragstart="drag(event)" data-name="Neurogaunts  11" data-points="45">
+    <b>Neurogaunts  11 - 45pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Neurogaunts  11', 45)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard30" draggable="false" ondragstart="drag(event)" data-name="Neurogaunts  22" data-points="90">
+    <b>Neurogaunts  22 - 90pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Neurogaunts  22', 90)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard31" draggable="false" ondragstart="drag(event)" data-name="Neurotyrant  1" data-points="105">
+    <b>Neurotyrant  1 - 105pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Neurotyrant  1', 105)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard32" draggable="false" ondragstart="drag(event)" data-name="Old One Eye  1" data-points="140">
+    <b>Old One Eye  1 - 140pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Old One Eye  1', 140)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard33" draggable="false" ondragstart="drag(event)" data-name="Parasite of Mortrex  1" data-points="90">
+    <b>Parasite of Mortrex  1 - 90pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Parasite of Mortrex  1', 90)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard34" draggable="false" ondragstart="drag(event)" data-name="Psychophage  1" data-points="125">
+    <b>Psychophage  1 - 125pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Psychophage  1', 125)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard35" draggable="false" ondragstart="drag(event)" data-name="Pyrovores  1" data-points="30">
+    <b>Pyrovores  1 - 30pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Pyrovores  1', 30)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard36" draggable="false" ondragstart="drag(event)" data-name="Pyrovores  2" data-points="60">
+    <b>Pyrovores  2 - 60pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Pyrovores  2', 60)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard37" draggable="false" ondragstart="drag(event)" data-name="Pyrovores  3" data-points="90">
+    <b>Pyrovores  3 - 90pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Pyrovores  3', 90)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard38" draggable="false" ondragstart="drag(event)" data-name="Raveners  3" data-points="75">
+    <b>Raveners  3 - 75pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Raveners  3', 75)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard39" draggable="false" ondragstart="drag(event)" data-name="Raveners  6" data-points="150">
+    <b>Raveners  6 - 150pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Raveners  6', 150)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard40" draggable="false" ondragstart="drag(event)" data-name="Ripper Swarms  3" data-points="35">
+    <b>Ripper Swarms  3 - 35pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Ripper Swarms  3', 35)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard41" draggable="false" ondragstart="drag(event)" data-name="Ripper Swarms 6" data-points="70">
+    <b>Ripper Swarms 6 - 70pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Ripper Swarms 6', 70)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard42" draggable="false" ondragstart="drag(event)" data-name="ScreamerKiller 1" data-points="180">
+    <b>ScreamerKiller 1 - 180pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('ScreamerKiller 1', 180)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard43" draggable="false" ondragstart="drag(event)" data-name="Spore Mines 3" data-points="50">
+    <b>Spore Mines 3 - 50pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Spore Mines 3', 50)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard44" draggable="false" ondragstart="drag(event)" data-name="Spore Mines 6" data-points="100">
+    <b>Spore Mines 6 - 100pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Spore Mines 6', 100)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard45" draggable="false" ondragstart="drag(event)" data-name="Sporocyst 1" data-points="145">
+    <b>Sporocyst 1 - 145pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Sporocyst 1', 145)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard46" draggable="false" ondragstart="drag(event)" data-name="Termagants 10" data-points="60">
+    <b>Termagants 10 - 60pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Termagants 10', 60)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard47" draggable="false" ondragstart="drag(event)" data-name="Termagants 20" data-points="120">
+    <b>Termagants 20 - 120pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Termagants 20', 120)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard48" draggable="false" ondragstart="drag(event)" data-name="Tervigon 1" data-points="200">
+    <b>Tervigon 1 - 200pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tervigon 1', 200)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard49" draggable="false" ondragstart="drag(event)" data-name="The Swarmlord 1" data-points="250">
+    <b>The Swarmlord 1 - 250pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('The Swarmlord 1', 250)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard50" draggable="false" ondragstart="drag(event)" data-name="Toxicrene 1" data-points="200">
+    <b>Toxicrene 1 - 200pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Toxicrene 1', 200)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard51" draggable="false" ondragstart="drag(event)" data-name="Trygon 1" data-points="180">
+    <b>Trygon 1 - 180pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Trygon 1', 180)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard52" draggable="false" ondragstart="drag(event)" data-name="Tyranid Warriors with Melee Bioweapons 3" data-points="90">
+    <b>Tyranid Warriors with Melee Bioweapons 3 - 90pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyranid Warriors with Melee Bioweapons 3', 90)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard53" draggable="false" ondragstart="drag(event)" data-name="Tyranid Warriors with Melee Bioweapons 6" data-points="180">
+    <b>Tyranid Warriors with Melee Bioweapons 6 - 180pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyranid Warriors with Melee Bioweapons 6', 180)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard54" draggable="false" ondragstart="drag(event)" data-name="Tyranid Warriors with Ranged Bioweapons 3" data-points="70">
+    <b>Tyranid Warriors with Ranged Bioweapons 3 - 70pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyranid Warriors with Ranged Bioweapons 3', 70)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard55" draggable="false" ondragstart="drag(event)" data-name="Tyranid Warriors with Ranged Bioweapons 6" data-points="140">
+    <b>Tyranid Warriors with Ranged Bioweapons 6 - 140pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyranid Warriors with Ranged Bioweapons 6', 140)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard56" draggable="false" ondragstart="drag(event)" data-name="Tyrannocyte 1" data-points="105.00">
+    <b>Tyrannocyte 1 - 105.00pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyrannocyte 1', 105.00)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard57" draggable="false" ondragstart="drag(event)" data-name="Tyrannofex 1" data-points="200">
+    <b>Tyrannofex 1 - 200pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyrannofex 1', 200)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard58" draggable="false" ondragstart="drag(event)" data-name="Tyrant Guard 3" data-points="95">
+    <b>Tyrant Guard 3 - 95pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyrant Guard 3', 95)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard59" draggable="false" ondragstart="drag(event)" data-name="Tyrant Guard 6" data-points="190">
+    <b>Tyrant Guard 6 - 190pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyrant Guard 6', 190)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard60" draggable="false" ondragstart="drag(event)" data-name="Venomthropes 3" data-points="70">
+    <b>Venomthropes 3 - 70pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Venomthropes 3', 70)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard61" draggable="false" ondragstart="drag(event)" data-name="Venomthropes 6" data-points="140">
+    <b>Venomthropes 6 - 140pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Venomthropes 6', 140)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard62" draggable="false" ondragstart="drag(event)" data-name="Von Ryan’s Leapers 3" data-points="75">
+    <b>Von Ryan’s Leapers 3 - 75pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Von Ryan’s Leapers 3', 75)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard63" draggable="false" ondragstart="drag(event)" data-name="Von Ryan’s Leapers 6" data-points="150">
+    <b>Von Ryan’s Leapers 6 - 150pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Von Ryan’s Leapers 6', 150)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard64" draggable="false" ondragstart="drag(event)" data-name="Winged Hive Tyrant 1" data-points="195">
+    <b>Winged Hive Tyrant 1 - 195pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Winged Hive Tyrant 1', 195)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard65" draggable="false" ondragstart="drag(event)" data-name="Winged Tyranid Prime 1" data-points="80">
+    <b>Winged Tyranid Prime 1 - 80pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Winged Tyranid Prime 1', 80)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard66" draggable="false" ondragstart="drag(event)" data-name="Zoanthropes 3" data-points="90">
+    <b>Zoanthropes 3 - 90pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Zoanthropes 3', 90)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard67" draggable="false" ondragstart="drag(event)" data-name="Zoanthropes 6" data-points="180">
+    <b>Zoanthropes 6 - 180pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Zoanthropes 6', 180)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard68" draggable="false" ondragstart="drag(event)" data-name="Invasion Fleet  Adaptive Biology" data-points="25">
+    <b>Invasion Fleet  Adaptive Biology - 25pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Invasion Fleet  Adaptive Biology', 25)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard69" draggable="false" ondragstart="drag(event)" data-name="Invasion Fleet  Alien Cunning" data-points="30">
+    <b>Invasion Fleet  Alien Cunning - 30pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Invasion Fleet  Alien Cunning', 30)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard70" draggable="false" ondragstart="drag(event)" data-name="Invasion Fleet  Perfectly Adapted" data-points="15">
+    <b>Invasion Fleet  Perfectly Adapted - 15pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Invasion Fleet  Perfectly Adapted', 15)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard71" draggable="false" ondragstart="drag(event)" data-name="Invasion Fleet  Synaptic Linchpin" data-points="10">
+    <b>Invasion Fleet  Synaptic Linchpin - 10pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Invasion Fleet  Synaptic Linchpin', 10)">Add</a>
+  </div>
+
+  <script>
+    function drag(event) {
+      event.dataTransfer.setData("text/plain", event.target.id);
+    }
+
+    function drop(event) {
+      event.preventDefault();
+      const unitId = event.dataTransfer.getData("text/plain");
+      addToRosterById(unitId);
+    }
+
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+
+    function addToRoster(name, points) {
+      const roster = document.getElementById("roster");
+      const unitCard = createUnitCard(name, points);
+      const deleteButton = createDeleteButton(unitCard);
+      unitCard.appendChild(deleteButton);
+      roster.appendChild(unitCard);
+      calculateTotalPoints();
+      filterUnitCards();
+      closeExportRoster();
+    }
+
+    function addToRosterById(unitId) {
+      const unitCard = document.getElementById(unitId);
+      const roster = document.getElementById("roster");
+      const clonedCard = unitCard.cloneNode(true);
+      clonedCard.removeAttribute("draggable");
+      clonedCard.style.cursor = "default";
+      const deleteButton = createDeleteButton(clonedCard);
+      clonedCard.appendChild(deleteButton);
+      roster.appendChild(clonedCard);
+      calculateTotalPoints();
+      filterUnitCards();
+    }
+
+    function createUnitCard(name, points) {
+      const unitCard = document.createElement("div");
+      unitCard.className = "unit-card";
+      unitCard.setAttribute("data-name", name);
+      unitCard.setAttribute("data-points", points);
+
+      const unitName = document.createElement("b");
+      unitName.textContent = name + " - " + points + "pts";
+      unitCard.appendChild(unitName);
+
+      return unitCard;
+    }
+
+    function createDeleteButton(unitCard) {
+      const deleteButton = document.createElement("span");
+      deleteButton.textContent = " - REMOVE";
+      deleteButton.className = "delete-button";
+      deleteButton.addEventListener("click", function () {
+        unitCard.parentElement.removeChild(unitCard);
+        closeExportRoster();
+        calculateTotalPoints();
+      });
+      return deleteButton;
+    }
+
+    function calculateTotalPoints() {
+      const roster = document.getElementById("roster");
+      const unitCards = roster.getElementsByClassName("unit-card");
+      let totalPoints = 0;
+      for (let i = 0; i < unitCards.length; i++) {
+        const points = parseInt(unitCards[i].getAttribute("data-points"));
+        totalPoints += points;
+      }
+      document.getElementById("totalPoints").textContent = "Total Points: " + totalPoints;
+    }
+
+    function filterUnitCards() {
+      const filterInput = document.getElementById("filter");
+      const filterValue = filterInput.value.toLowerCase();
+      const unitCards = document.getElementsByClassName("unit-card");
+
+      for (let i = 0; i < unitCards.length; i++) {
+        const unitCard = unitCards[i];
+        const unitName = unitCard.getAttribute("data-name").toLowerCase();
+        const inRoster = unitCard.parentElement.id === "roster";
+
+        if (unitName.includes(filterValue) || inRoster) {
+          unitCard.style.display = "block";
+        } else {
+          unitCard.style.display = "none";
+        }
+      }
+    }
+
+    function clearFilterInput() {
+      const filterInput = document.getElementById("filter");
+      filterInput.value = "";
+      filterUnitCards();
+    }
+
+    function exportRoster() {
+      const exportButton = document.querySelector("button[onclick='exportRoster()']");
+      exportButton.style.display = "none";
+
+      const roster = document.getElementById("roster");
+      const unitCards = roster.getElementsByClassName("unit-card");
+      let rosterText = "Roster Summary\n";
+      let totalPoints = 0;
+
+      for (let i = 0; i < unitCards.length; i++) {
+        const unitCard = unitCards[i];
+        const name = unitCard.getAttribute("data-name");
+        const points = unitCard.getAttribute("data-points");
+        rosterText += name + " - " + points + " pts"+"\n";
+        totalPoints += parseInt(points);
+      }
+
+      const exportContainer = document.getElementsByClassName("export-container")[0];
+      const exportTextarea = exportContainer.querySelector("#exportTextarea");
+      exportTextarea.value = rosterText + "Total Points: " + totalPoints+" pts";
+      exportContainer.style.display = "block";
+    }
+
+    function closeExportRoster() {
+      const exportContainer = document.getElementsByClassName("export-container")[0];
+      const exportButton = document.querySelector("button[onclick='exportRoster()']");
+      exportContainer.style.display = "none";
+      exportButton.style.display = "block";
+    }
+
+    const roster = document.getElementById("roster");
+    roster.addEventListener("dragover", allowDrop);
+    roster.addEventListener("drop", drop);
+  </script>
+</body>
+</html>
