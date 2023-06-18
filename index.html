@@ -1,41 +1,36 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <title>HiveHelper</title>
   <meta name="viewport" content="width=device-width, initial-scale=0.8">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
     .roster {
       border: 2px solid black;
       padding: 10px;
       margin-right: 10px;
       min-height: 200px;
-      background-color: lightslategray;
     }
-
     .unit-card {
-      border: 2px solid black;
+      border: 2px solid gray;
       background-color: #f5f5f5;
       padding: 10px;
       margin-bottom: 10px;
       cursor: move;
     }
-
     .delete-button {
       cursor: pointer;
     }
-
     .export-container {
       padding: 10px;
       margin-bottom: 10px;
     }
-
     .export-textarea {
       width: 100%;
       height: 200px;
     }
-
     .close-button {
       cursor: pointer;
       color: black;
@@ -45,10 +40,8 @@
     }
   </style>
 </head>
-
 <body>
   <h1>Hive Helper</h1>
-
   <div class="export-container" style="display: none;">
     <textarea id="exportTextarea" class="export-textarea" readonly></textarea>
     <span class="close-button" onclick="closeExportRoster()">X</span>
@@ -62,3911 +55,332 @@
   <p id="totalPoints">Total Points: 0</p>
 
   <div>
-    <label for="faction">Faction:</label>
-    <select id="faction" onchange="filterUnitCards()">
-      <option value="">/option>
-      <!-- Add JavaScript code to populate the options -->
-    </select>
-  </div> <br>
-
-  <div>
     <br><label for="filter">Filter:</label>
     <input type="text" id="filter" oninput="filterUnitCards()" placeholder="Enter a search term">
     <button onclick="clearFilterInput()">X</button>
   </div><br>
 
-  <script>
-const unitCards = [
-  //ADEPTA SORORITAS
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard1',
-//     name: 'Aestred Thurga and Agathae Dolan (2 models)',
-//     points: 70,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard2',
-//     name: 'Arco-flagellants (3 models)',
-//     points: 45,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard3',
-//     name: 'Arco-flagellants (10 models)',
-//     points: 150,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard4',
-//     name: 'Battle Sisters Squad (10 models)',
-//     points: 110,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard5',
-//     name: 'Canoness (1 model)',
-//     points: 60,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard6',
-//     name: 'Castigator (1 model)',
-//     points: 150,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard7',
-//     name: 'Celestian Sacresants (5 models)',
-//     points: 65,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard8',
-//     name: 'Celestian Sacresants (10 models)',
-//     points: 130,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard9',
-//     name: 'Crusaders (2 models)',
-//     points: 20,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard10',
-//     name: 'Crusaders (4 models)',
-//     points: 40,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard11',
-//     name: 'Crusaders (6 models)',
-//     points: 60,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard12',
-//     name: 'Daemonifuge (2 models)',
-//     points: 80,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard13',
-//     name: 'Death Cult Assassins (2 models)',
-//     points: 35,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard14',
-//     name: 'Death Cult Assassins (4 models)',
-//     points: 70,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard15',
-//     name: 'Death Cult Assassins (6 models)',
-//     points: 105,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard16',
-//     name: 'Dialogus (1 model)',
-//     points: 35,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard17',
-//     name: 'Dogmata (1 model)',
-//     points: 50,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard18',
-//     name: 'Dominion Squad (10 models)',
-//     points: 130,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard19',
-//     name: 'Exorcist (1 model)',
-//     points: 140,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard20',
-//     name: 'Hospitaller (1 model)',
-//     points: 40,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard21',
-//     name: 'Imagifier (1 model)',
-//     points: 40,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard22',
-//     name: 'Immolator (1 model)',
-//     points: 130,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard23',
-//     name: 'Junith Eruita (1 model)',
-//     points: 100,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard24',
-//     name: 'Missionary (1 model)',
-//     points: 35,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard25',
-//     name: 'Mortifiers (1 model)',
-//     points: 60,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard26',
-//     name: 'Mortifiers (2 models)',
-//     points: 120,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard27',
-//     name: 'Morvenn Vahl (1 model)',
-//     points: 135,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard28',
-//     name: 'Palatine (1 model)',
-//     points: 55,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard29',
-//     name: 'Paragon Warsuits (3 models)',
-//     points: 240,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard30',
-//     name: 'Penitent Engines (1 model)',
-//     points: 60,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard31',
-//     name: 'Penitent Engines (2 models)',
-//     points: 120,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard32',
-//     name: 'Preacher (1 model)',
-//     points: 45,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard33',
-//     name: 'Repentia Squad (5 models)',
-//     points: 75,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard34',
-//     name: 'Repentia Squad (10 models)',
-//     points: 150,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard35',
-//     name: 'Retributor Squad (5 models)',
-//     points: 130,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard36',
-//     name: 'Saint Celestine (3 models)',
-//     points: 150,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard37',
-//     name: 'Seraphim Squad (5 models)',
-//     points: 70,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard38',
-//     name: 'Seraphim Squad (10 models)',
-//     points: 140,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard39',
-//     name: 'Sisters Novitiate Squad (10 models)',
-//     points: 90,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard40',
-//     name: 'Sororitas Rhino (1 model)',
-//     points: 80,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard41',
-//     name: 'Triumph of Saint Katherine (1 model)',
-//     points: 150,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard42',
-//     name: 'Zephyrim Squad (5 models)',
-//     points: 70,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard43',
-//     name: 'Zephyrim Squad (10 models)',
-//     points: 140,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard44',
-//     name: 'Hallowed Martyrs - Blade of Saint Ellynor',
-//     points: 15,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard45',
-//     name: 'Hallowed Martyrs - Litanies of Faith',
-//     points: 25,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard46',
-//     name: 'Hallowed Martyrs - Mantle of Ophelia',
-//     points: 20,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-//   {
-//     id: 'ADEPTA SORORITAS-unitCard47',
-//     name: 'Hallowed Martyrs - Saintly Example',
-//     points: 10,
-//     faction: 'ADEPTA SORORITAS'
-//   },
-
-//   //custodes
-
-//   {
-//   id: 'ADEPTUS CUSTODES-card1',
-//   name: 'Aleya - 1 model',
-//   points: 80,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card2',
-//   name: 'Allarus Custodians - 2 models',
-//   points: 130,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card3',
-//   name: 'Allarus Custodians - 3 models',
-//   points: 195,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card4',
-//   name: 'Allarus Custodians - 5 models',
-//   points: 325,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card5',
-//   name: 'Allarus Custodians - 6 models',
-//   points: 390,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card6',
-//   name: 'Anathema Psykana Rhino - 1 model',
-//   points: 75,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card7',
-//   name: 'Blade Champion - 1 model',
-//   points: 100,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card8',
-//   name: 'Custodian Guard - 4 models',
-//   points: 180,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card9',
-//   name: 'Custodian Guard - 5 models',
-//   points: 225,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card10',
-//   name: 'Custodian Guard - 9 models',
-//   points: 405,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card11',
-//   name: 'Custodian Guard - 10 models',
-//   points: 450,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card12',
-//   name: 'Custodian Wardens - 3 models',
-//   points: 150,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card13',
-//   name: 'Custodian Wardens - 6 models',
-//   points: 300,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card14',
-//   name: 'Knight-Centura - 1 model',
-//   points: 75,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card15',
-//   name: 'Prosecutors - 4 models',
-//   points: 40,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card16',
-//   name: 'Prosecutors - 5 models',
-//   points: 50,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card17',
-//   name: 'Prosecutors - 9 models',
-//   points: 90,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-
-
-//   id: 'ADEPTUS CUSTODES-card18',
-//   name: 'Prosecutors - 10 models',
-//   points: 100,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card19',
-//   name: 'Shield-Captain - 1 model',
-//   points: 120,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card20',
-//   name: 'Shield-Captain in Allarus Terminator Armour - 1 model',
-//   points: 120,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card21',
-//   name: 'Shield-Captain on Dawneagle Jetbike - 1 model',
-//   points: 145,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card22',
-//   name: 'Trajann Valoris - 1 model',
-//   points: 145,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card23',
-//   name: 'Valerian - 1 model',
-//   points: 115,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card24',
-//   name: 'Venerable Contemptor Dreadnought - 1 model',
-//   points: 185,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card25',
-//   name: 'Venerable Land Raider - 1 model',
-//   points: 260,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card26',
-//   name: 'Vertus Praetors - 2 models',
-//   points: 180,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card27',
-//   name: 'Vertus Praetors - 3 models',
-//   points: 270,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card28',
-//   name: 'Vertus Praetors - 5 models',
-//   points: 450,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card29',
-//   name: 'Vertus Praetors - 6 models',
-//   points: 540,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card30',
-//   name: 'Vigilators - 4 models',
-//   points: 60,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card31',
-//   name: 'Vigilators - 5 models',
-//   points: 75,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card32',
-//   name: 'Vigilators - 9 models',
-//   points: 135,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card33',
-//   name: 'Vigilators - 10 models',
-//   points: 150,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card34',
-//   name: 'Witchseekers - 4 models',
-//   points
-
-// : 60,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card35',
-//   name: 'Witchseekers - 5 models',
-//   points: 75,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card36',
-//   name: 'Witchseekers - 9 models',
-//   points: 135,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-card37',
-//   name: 'Witchseekers - 10 models',
-//   points: 150,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-enhancement1',
-//   name: 'Shield Host - Ceaseless Hunter',
-//   points: 30,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-enhancement2',
-//   name: 'Shield Host - Inspirational Exemplar',
-//   points: 10,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-enhancement3',
-//   name: 'Shield Host - Unstoppable Destroyer',
-//   points: 25,
-//   faction: 'Adeptus Custodes'
-// },
-// {
-//   id: 'ADEPTUS CUSTODES-enhancement4',
-//   name: 'Shield Host - Veiled Blade',
-//   points: 25,
-//   faction: 'Adeptus Custodes'
-// },
-
-// //ADEPTUS MECHANICUS
-
-// {
-//   id: 'ADEPTUS MECHANICUS-card1',
-//   name: 'Archaeopter Fusilave - 1 model',
-//   points: 160,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card2',
-//   name: 'Archaeopter Stratoraptor - 1 model',
-//   points: 165,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card3',
-//   name: 'Archaeopter Transvector - 1 model',
-//   points: 155,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card4',
-//   name: 'Belisarius Cawl - 1 model',
-//   points: 185,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card5',
-//   name: 'Corpuscarii Electro-Priests - 5 models',
-//   points: 65,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card6',
-//   name: 'Corpuscarii Electro-Priests - 10 models',
-//   points: 130,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card7',
-//   name: 'Cybernetica Datasmith - 1 model',
-//   points: 35,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card8',
-//   name: 'Fulgurite Electro-Priests - 5 models',
-//   points: 80,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card9',
-//   name: 'Fulgurite Electro-Priests - 10 models',
-//   points: 160,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card10',
-//   name: 'Ironstrider Ballistarii - 1 model',
-//   points: 50,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card11',
-//   name: 'Ironstrider Ballistarii - 2 models',
-//   points: 100,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card12',
-//   name: 'Ironstrider Ballistarii - 3 models',
-//   points: 150,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card13',
-//   name: 'Kastelan Robots - 2 models',
-//   points: 215,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card14',
-//   name: 'Kastelan Robots - 4 models',
-//   points: 430,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card15',
-//   name: 'Kataphron Breachers - 3 models',
-//   points: 150,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card16',
-//   name: 'Kataphron Breachers - 6 models',
-//   points: 300,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card17',
-//   name: 'Kataphron Destroyers - 3 models',
-//   points: 120,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card18',
-//   name: 'Kataphron Destroyers - 6 models',
-//   points: 240,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card19',
-//   name: 'Onager Dunecrawler - 1 model',
-//   points: 140,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card20',
-//   name: 'Pteraxii Skystalkers - 5 models',
-//   points: 70,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card21',
-//   name: 'Pteraxii Skystalkers - 10 models',
-//   points: 140,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card22',
-//   name: 'Pteraxii Sterylizors - 5 models',
-//   points: 75,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card23',
-//   name: 'Pteraxii Sterylizors - 10 models',
-//   points: 150,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card24',
-//   name: 'Serberys Raiders - 3 models',
-//   points: 75,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card25',
-//   name: 'Serberys Raiders - 6 models',
-//   points: 150,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card26',
-//   name: 'Serberys Sulphurhounds - 3 models',
-//   points: 65,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card27',
-//   name: 'Serberys Sulphurhounds - 6 models',
-//   points: 130,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card28',
-//   name: 'Servitors - 4 models',
-//   points: 50,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card29',
-//   name: 'Sicarian Infiltrators - 5 models',
-//   points: 80,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card30',
-//   name: 'Sicarian Infiltrators - 10 models',
-//   points: 160,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card31',
-//   name: 'Sicarian Ruststalkers - 5 models',
-//   points: 75,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card32',
-//   name: 'Sicarian Ruststalkers - 10 models',
-//   points: 150,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card33',
-//   name: 'Skitarii Marshal - 1 model',
-//   points: 45,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card34',
-//   name: 'Skitarii Rangers - 10 models',
-//   points: 125,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card35',
-//   name: 'Skitarii Vanguard - 10 models',
-//   points: 100,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card36',
-//   name: 'Skorpius Disintegrator - 1 model',
-//   points: 195,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card37',
-//   name: 'Skorpius Dunerider - 1 model',
-//   points: 80,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card38',
-//   name: 'Sydonian Dragoons - 1 model',
-//   points: 75,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card39',
-//   name: 'Sydonian Dragoons - 2 models',
-//   points: 150,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card40',
-//   name: 'Sydonian Dragoons - 3 models',
-//   points: 225,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card41',
-//   name: 'Tech-Priest Dominus - 1 model',
-//   points: 75,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card42',
-//   name: 'Tech-Priest Enginseer - 1 model',
-//   points: 45,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card43',
-//   name: 'Tech-Priest Manipulus - 1 model',
-//   points: 60,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-card44',
-//   name: 'Technoarcheologist - 1 model',
-//   points: 45,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-enhancement1',
-//   name: 'Rad-Cohort - Archived Purge Protocols',
-//   points: 10,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-enhancement2',
-//   name: 'Rad-Cohort - Excoriating Emanation',
-//   points: 25,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-enhancement3',
-//   name: 'Rad-Cohort - Master Annihilator',
-//   points: 35,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-enhancement4',
-//   name: 'Rad-Cohort - Omni-steriliser',
-//   points: 20,
-//   faction: 'Adeptus Mechanicus'
-// },
-
-// //AELDARI
-
-// {id: 'AELDARI-card1',
-//   name: 'Asurmen - 1 model',
-//   points: 120,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card2',
-//   name: 'Autarch - 1 model',
-//   points: 65,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card3',
-//   name: 'Autarch Skyrunner - 1 model',
-//   points: 80,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card4',
-//   name: 'Autarch Wayleaper - 1 model',
-//   points: 80,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card5',
-//   name: 'Avatar of Khaine - 1 model',
-//   points: 295,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card6',
-//   name: 'Baharroth - 1 model',
-//   points: 125,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card7',
-//   name: 'Corsair Voidreavers - 5 models',
-//   points: 70,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card8',
-//   name: 'Corsair Voidreavers - 10 models',
-//   points: 140,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card9',
-//   name: 'Corsair Voidscarred - 5 models',
-//   points: 90,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card10',
-//   name: 'Corsair Voidscarred - 10 models',
-//   points: 180,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card11',
-//   name: 'Crimson Hunter - 1 model',
-//   points: 160,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card12',
-//   name: 'Dark Reapers - 5 models',
-//   points: 75,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card13',
-//   name: 'Dark Reapers - 10 models',
-//   points: 150,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card14',
-//   name: 'Death Jester - 1 model',
-//   points: 70,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card15',
-//   name: 'Dire Avengers - 5 models',
-//   points: 70,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card16',
-//   name: 'Dire Avengers - 10 models',
-//   points: 140,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card17',
-//   name: 'Eldrad Ulthran - 1 model',
-//   points: 100,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card18',
-//   name: 'Falcon - 1 model',
-//   points: 140,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card19',
-//   name: 'Farseer - 1 model',
-//   points: 65,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card20',
-//   name: 'Farseer Skyrunner - 1 model',
-//   points: 75,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card21',
-//   name: 'Fire Dragons - 5 models',
-//   points: 85,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card22',
-//   name: 'Fire Dragons - 10 models',
-//   points: 170,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card23',
-//   name: 'Fire Prism - 1 model',
-//   points: 125,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card24',
-//   name: 'Fuegan - 1 model',
-//   points: 115,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card25',
-//   name: 'Guardian Defenders - 11 models',
-//   points: 110,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card26',
-//   name: 'Hemlock Wraithfighter - 1 model',
-//   points: 155,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card27',
-//   name: 'Howling Banshees - 5 models',
-//   points: 85,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card28',
-//   name: 'Howling Banshees - 10 models',
-//   points: 170,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card29',
-//   name: 'Illic Nightspear - 1 model',
-//   points: 65,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card30',
-//   name: 'Jain Zar - 1 model',
-//   points: 105,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card31',
-//   name: 'Karandras - 1 model',
-//   points: 100,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card32',
-//   name: 'Maugan Ra - 1 model',
-//   points: 130,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card33',
-//   name: 'Night Spinner - 1 model',
-//   points: 140,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card34',
-//   name: 'Prince Yriel - 1 model',
-//   points: 100,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card35',
-//   name: 'Rangers - 5 models',
-//   points: 55,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card36',
-//   name: 'Rangers - 10 models',
-//   points: 110,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card37',
-//   name: 'Shadowseer - 1 model',
-//   points: 60,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card38',
-//   name: 'Shining Spears - 3 models',
-//   points: 120,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card39',
-//   name: 'Shining Spears - 6 models',
-//   points: 240,
-//   faction
-
-// : 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card40',
-//   name: 'Shroud Runners - 3 models',
-//   points: 80,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card41',
-//   name: 'Shroud Runners - 6 models',
-//   points: 160,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card42',
-//   name: 'Skyweavers - 2 models',
-//   points: 95,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card43',
-//   name: 'Skyweavers - 4 models',
-//   points: 190,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card44',
-//   name: 'Solitaire - 1 model',
-//   points: 115,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card45',
-//   name: 'Spiritseer - 1 model',
-//   points: 65,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card46',
-//   name: 'Starweaver - 1 model',
-//   points: 80,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card47',
-//   name: 'Storm Guardians - 11 models',
-//   points: 115,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card48',
-//   name: 'Striking Scorpions - 5 models',
-//   points: 75,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card49',
-//   name: 'Striking Scorpions - 10 models',
-//   points: 150,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card50',
-//   name: 'Support Weapons - 1 model',
-//   points: 85,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card51',
-//   name: 'Swooping Hawks - 5 models',
-//   points: 75,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card52',
-//   name: 'Swooping Hawks - 10 models',
-//   points: 150,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card53',
-//   name: 'The Visarch - 1 model',
-//   points: 90,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card54',
-//   name: 'The Yncarne - 1 model',
-//   points: 270,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card55',
-//   name: 'Troupe - 5 models',
-//   points: 75,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card56',
-//   name: 'Troupe - 6 models',
-//   points: 90,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card57',
-//   name: 'Troupe - 11 models',
-//   points: 165,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card58',
-//   name: 'Troupe - 12 models',
-//   points: 180,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card59',
-//   name: 'Troupe Master - 1 model',
-//   points: 55,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card60',
-//   name: 'Voidweaver - 1 model',
-//   points: 100,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card61',
-//   name: 'Vypers - 1 model',
-//   points: 75,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card62',
-//   name: 'War Walkers - 1 model',
-//   points: 95,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card63',
-//   name: 'Warlock - 1 model',
-//   points: 45,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card64',
-//   name: 'Warlock Conclave - 2 models',
-//   points: 60,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card65',
-//   name: 'Warlock Conclave - 4 models',
-//   points: 120,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card66',
-//   name: 'Warlock Skyrunner - 1 model',
-//   points: 55,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card67',
-//   name: 'Warlock Skyrunner Conclave - 2 models',
-//   points: 100,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card68',
-//   name: 'Warlock Skyrunner Conclave - 3 models',
-//   points: 150,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card69',
-//   name: 'Warp Spiders - 5 models',
-//   points: 100,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card70',
-//   name: 'Warp Spiders - 10 models',
-//   points: 200,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card71',
-//   name: 'Wave Serpent - 1 model',
-//   points: 120,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card72',
-//   name: 'Webway Gate - 2 models',
-//   points: 220,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card73',
-//   name: 'Windriders - 3 models',
-//   points: 80,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card74',
-//   name: 'Windriders - 6 models',
-//   points: 160,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card75',
-//   name: 'Windriders - 9 models',
-//   points: 240,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card76',
-//   name: 'Wraithblades - 5 models',
-//   points: 170,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card77',
-//   name: 'Wraithblades - 10 models',
-//   points: 340,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card78',
-//   name: 'Wraithguard - 5 models',
-//   points: 155,
-//   faction
-
-// : 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card79',
-//   name: 'Wraithguard - 10 models',
-//   points: 310,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card80',
-//   name: 'Wraithknight - 1 model',
-//   points: 370,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card81',
-//   name: 'Wraithlord - 1 model',
-//   points: 160,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card82',
-//   name: 'Yvraine - 1 model',
-//   points: 100,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card83',
-//   name: 'Shield Host - Ceaseless Hunter',
-//   points: 30,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card84',
-//   name: 'Shield Host - Inspirational Exemplar',
-//   points: 10,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card85',
-//   name: 'Shield Host - Unstoppable Destroyer',
-//   points: 25,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-card86',
-//   name: 'Shield Host - Veiled Blade',
-//   points: 25,
-//   faction: 'Aeldari'
-// },
-
-// {
-//   id: 'ADEPTUS MECHANICUS-enhancement1',
-//   name: 'Rad-Cohort - Archived Purge Protocols',
-//   points: 10,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-enhancement2',
-//   name: 'Rad-Cohort - Excoriating Emanation',
-//   points: 25,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-enhancement3',
-//   name: 'Rad-Cohort - Master Annihilator',
-//   points: 35,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'ADEPTUS MECHANICUS-enhancement4',
-//   name: 'Rad-Cohort - Omni-steriliser',
-//   points: 20,
-//   faction: 'Adeptus Mechanicus'
-// },
-// {
-//   id: 'AELDARI-enhancement1',
-//   name: 'Battle Host - Fate’s Messenger',
-//   points: 15,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-enhancement2',
-//   name: 'Battle Host - Reader of the Runes',
-//   points: 20,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-enhancement3',
-//   name: 'Battle Host - The Phoenix Gem',
-//   points: 25,
-//   faction: 'Aeldari'
-// },
-// {
-//   id: 'AELDARI-enhancement4',
-//   name: 'Battle Host - The Weeping Stones',
-//   points: 15,
-//   faction: 'Aeldari'
-// },
-// //AGENTS OF THE IMPERIUM
-
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card1',
-//   name: 'Callidus Assassin - 1 model',
-//   points: 115,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card2',
-//   name: 'Culexus Assassin - 1 model',
-//   points: 85,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card3',
-//   name: 'Eversor Assassin - 1 model',
-//   points: 75,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card4',
-//   name: 'Exaction Squad - 5 models',
-//   points: 35,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card5',
-//   name: 'Exaction Squad - 10-11 models',
-//   points: 75,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card6',
-//   name: 'Imperial Navy Breachers - 10 models',
-//   points: 105,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card7',
-//   name: 'Inquisitor - 1 model',
-//   points: 55,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card8',
-//   name: 'Inquisitor Coteaz - 1 model',
-//   points: 75,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card9',
-//   name: 'Inquisitor Eisenhorn - 1 model',
-//   points: 65,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card10',
-//   name: 'Inquisitor Greyfax - 1 model',
-//   points: 65,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card11',
-//   name: 'Inquisitor Karamazov - 1 model',
-//   points: 130,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card12',
-//   name: 'Inquisitorial Henchmen - 4 Inquisitorial Acolytes',
-//   points: 40,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card13',
-//   name: 'Inquisitorial Henchmen - 4 Inquisitorial Acolytes, 1 Gun Servitor and 1 Mystic',
-//   points: 60,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card14',
-//   name: 'Inquisitorial Henchmen - 10 Inquisitorial Acolytes',
-//   points: 100,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card15',
-//   name: 'Inquisitorial Henchmen - 10 Inquisitorial Acolytes, 2 Gun Servitors and 2 Mystics',
-//   points: 140,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card16',
-//   name: 'Jokaero',
-//   points: 10,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card17',
-//   name: 'Daemonhost',
-//   points: 10,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card18',
-//   name: 'Lord Inquisitor Kyria Draxus - 1 model',
-//   points: 75,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card19',
-//   name: 'Rogue Trader Entourage - 4 models',
-//   points: 105,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card20',
-//   name: 'Subductor Squad - 10-11 models',
-//   points: 110,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card21',
-//   name: 'Vigilant Squad - 10-11 models',
-//   points: 105,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card22',
-//   name: 'Vindicare Assassin - 1 model',
-//   points: 80,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card23',
-//   name: 'Voidsmen-at-Arms - 5 models',
-//   points: 40,
-//   faction: 'Agents of the Imperium'
-// },
-// {
-//   id: 'AGENTS OF THE IMPERIUM-card24',
-//   name: 'Voidsmen-at-Arms - 10 models',
-//   points: 80,
-//   faction: 'Agents of the Imperium'
-// },
-//   {
-//     id: 'AGENTS OF THE IMPERIUM-enhancement1',
-//     name: 'Battle Host - Fate’s Messenger',
-//     points: 15,
-//     faction: 'Agents of the Imperium'
-//   },
-//   {
-//     id: 'AGENTS OF THE IMPERIUM-enhancement2',
-//     name: 'Battle Host - Reader of the Runes',
-//     points: 20,
-//     faction: 'Agents of the Imperium'
-//   },
-//   {
-//     id: 'AGENTS OF THE IMPERIUM-enhancement3',
-//     name: 'Battle Host - The Phoenix Gem',
-//     points: 25,
-//     faction: 'Agents of the Imperium'
-//   },
-//   {
-//     id: 'AGENTS OF THE IMPERIUM-enhancement4',
-//     name: 'Battle Host - The Weeping Stones',
-//     points: 15,
-//     faction: 'Agents of the Imperium'
-//   },
-
-//   //ASTRA MILITARUM
-
-//   {
-//   id: 'ASTRA MILITARUM-card1',
-//   name: 'Aegis Defence Line - 1 model',
-//   points: 145,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card2',
-//   name: 'Armoured Sentinels - 1 model',
-//   points: 70,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card3',
-//   name: 'Armoured Sentinels - 2 models',
-//   points: 140,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card4',
-//   name: 'Armoured Sentinels - 3 models',
-//   points: 210,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card5',
-//   name: 'Attilan Rough Riders - 5 models',
-//   points: 80,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card6',
-//   name: 'Attilan Rough Riders - 10 models',
-//   points: 160,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card7',
-//   name: 'Baneblade - 1 model',
-//   points: 540,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card8',
-//   name: 'Banehammer - 1 model',
-//   points: 490,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card9',
-//   name: 'Banesword - 1 model',
-//   points: 515,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card10',
-//   name: 'Basilisk - 1 model',
-//   points: 110,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card11',
-//   name: 'Bullgryn Squad - 3 models',
-//   points: 90,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card12',
-//   name: 'Bullgryn Squad - 6 models',
-//   points: 180,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card13',
-//   name: 'Cadian Castellan - 1 model',
-//   points: 50,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card14',
-//   name: 'Cadian Command Squad - 5 models',
-//   points: 65,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card15',
-//   name: 'Cadian Shock Troops - 10 models',
-//   points: 65,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card16',
-//   name: 'Cadian Shock Troops - 20 models',
-//   points: 130,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card17',
-//   name: 'Catachan Jungle Fighters - 10 models',
-//   points: 65,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card18',
-//   name: 'Catachan Jungle Fighters - 20 models',
-//   points: 130,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card19',
-//   name: 'Chimera - 1 model',
-//   points: 85,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card20',
-//   name: 'Commissar - 1 model',
-//   points: 35,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card21',
-//   name: 'Death Korps of Krieg - 10 models',
-//   points: 65,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card22',
-//   name: 'Death Korps of Krieg - 20 models',
-//   points: 130,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card23',
-//   name: 'Deathstrike - 1 model',
-//   points: 135,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card24',
-//   name: 'Doomhammer - 1 model',
-//   points: 455,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card25',
-//   name: 'Field Ordnance Battery - 2 models',
-//   points: 100,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card26',
-//   name: 'Gaunt’s Ghosts - 6 models',
-//   points: 115,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card27',
-//   name: 'Heavy Weapons Squad - 3 models',
-//   points: 60,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card28',
-//   name: 'Hellhammer - 1 model',
-//   points: 510,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card29',
-//   name: 'Hellhound - 1 model',
-//   points: 125,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card30',
-//   name: 'Hydra - 1 model',
-//   points: 95,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card31',
-//   name: 'Infantry Squad - 9-10 models',
-//   points: 65,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card32',
-//   name: 'Infantry Squad - 18-20 models',
-//   points: 130,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card33',
-//   name: '‘Iron Hand’ Straken - 1 model',
-//   points: 80,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card34',
-//   name: 'Kasrkin - 10 models',
-//   points: 120,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card35',
-//   name: 'Leman Russ Battle Tank - 1 model',
-//   points: 195,
-
-
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card36',
-//   name: 'Leman Russ Demolisher - 1 model',
-//   points: 220,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card37',
-//   name: 'Leman Russ Eradicator - 1 model',
-//   points: 180,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card38',
-//   name: 'Leman Russ Executioner - 1 model',
-//   points: 195,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card39',
-//   name: 'Leman Russ Exterminator - 1 model',
-//   points: 200,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card40',
-//   name: 'Leman Russ Punisher - 1 model',
-//   points: 180,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card41',
-//   name: 'Leman Russ Vanquisher - 1 model',
-//   points: 190,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card42',
-//   name: 'Lord Solar Leontus - 1 model',
-//   points: 125,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card43',
-//   name: 'Manticore - 1 model',
-//   points: 105,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card44',
-//   name: 'Militarum Tempestus Command Squad - 5 models',
-//   points: 80,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card45',
-//   name: 'Munitorum Servitors - 4 models',
-//   points: 35,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card46',
-//   name: 'Nork Deddog - 1 model',
-//   points: 70,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card47',
-//   name: 'Ogryn Bodyguard - 1 model',
-//   points: 40,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card48',
-//   name: 'Ogryn Squad - 3 models',
-//   points: 75,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card49',
-//   name: 'Ogryn Squad - 6 models',
-//   points: 150,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card50',
-//   name: 'Platoon Command Squad - 4-5 models',
-//   points: 60,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card51',
-//   name: 'Primaris Psyker - 1 model',
-//   points: 60,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card52',
-//   name: 'Ratling Snipers - 5 models',
-//   points: 70
-
-// ,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card53',
-//   name: 'Regimental Attachés - 3 models',
-//   points: 40,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card54',
-//   name: 'Regimental Enginseer - 1 model',
-//   points: 45,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card55',
-//   name: 'Regimental Preacher - 1 model',
-//   points: 35,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card56',
-//   name: 'Rogal Dorn Battle Tank - 1 model',
-//   points: 285,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card57',
-//   name: 'Scout Sentinels - 1 model',
-//   points: 50,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card58',
-//   name: 'Scout Sentinels - 2 models',
-//   points: 100,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card59',
-//   name: 'Scout Sentinels - 3 models',
-//   points: 150,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card60',
-//   name: 'Sergeant Harker - 1 model',
-//   points: 60,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card61',
-//   name: 'Shadowsword - 1 model',
-//   points: 440,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card62',
-//   name: 'Sly Marbo - 1 model',
-//   points: 75,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card63',
-//   name: 'Stormlord - 1 model',
-//   points: 460,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card64',
-//   name: 'Stormsword - 1 model',
-//   points: 520,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card65',
-//   name: 'Tank Commander - 1 model',
-//   points: 240,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card66',
-//   name: 'Taurox - 1 model',
-//   points: 65,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card67',
-//   name: 'Taurox Prime - 1 model',
-//   points: 90,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card68',
-//   name: 'Tempestus Scions - 5 models',
-//   points: 60,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card69',
-//   name: 'Tempestus Scions - 10 models',
-//   points: 120,
-//   faction: 'Astra Militarum'
-// },
-// {
- 
-
-//  id: 'ASTRA MILITARUM-card70',
-//   name: 'Ursula Creed - 1 model',
-//   points: 55,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card71',
-//   name: 'Valkyrie - 1 model',
-//   points: 200,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card72',
-//   name: 'Wyvern - 1 model',
-//   points: 90,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card73',
-//   name: 'Combined Regiment - Death Mask of Ollanius',
-//   points: 10,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card74',
-//   name: 'Combined Regiment - Drill Commander',
-//   points: 20,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card75',
-//   name: 'Combined Regiment - Grand Strategist',
-//   points: 15,
-//   faction: 'Astra Militarum'
-// },
-// {
-//   id: 'ASTRA MILITARUM-card76',
-//   name: 'Combined Regiment - Kurov’s Aquila',
-//   points: 40,
-//   faction: 'Astra Militarum'
-// },
-
-// //Black Templars
-
-// {
-//   id: 'BLACK TEMPLARS-card1',
-//   name: 'Black Templars Gladiator Lancer - 1 model',
-//   points: 160,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card2',
-//   name: 'Black Templars Gladiator Reaper - 1 model',
-//   points: 175,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card3',
-//   name: 'Black Templars Gladiator Valiant - 1 model',
-//   points: 180,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card4',
-//   name: 'Black Templars Impulsor - 1 model',
-//   points: 115,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card5',
-//   name: 'Black Templars Repulsor - 1 model',
-//   points: 220,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card6',
-//   name: 'Black Templars Repulsor Executioner - 1 model',
-//   points: 245,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card7',
-//   name: 'Castellan - 1 model',
-//   points: 70,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card8',
-//   name: 'Chaplain Grimaldus - 4 models',
-//   points: 120,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card9',
-//   name: 'Crusader Squad - 1 Sword Brother and 4 Initiates',
-//   points: 75,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card10',
-//   name: 'Crusader Squad - 1 Sword Brother and 9 Initiates',
-//   points: 145,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card11',
-//   name: 'Crusader Squad - 1 Sword Brother, 4 Initiates, and 5 Neophytes',
-//   points: 145,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card12',
-//   name: 'Crusader Squad - 1 Sword Brother, 9 Initiates, and 10 Neophytes',
-//   points: 290,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card13',
-//   name: 'High Marshal Helbrecht - 1 model',
-//   points: 105,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card14',
-//   name: 'Marshal - 1 model',
-//   points: 75,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card15',
-//   name: 'Primaris Crusader Squad - 1 Sword Brother, 5 Initiates, and 4 Neophytes',
-//   points: 160,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card16',
-//   name: 'Primaris Crusader Squad - 1 Sword Brother, 11 Initiates, and 8 Neophytes',
-//   points: 320,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card17',
-//   name: 'Primaris Sword Brethren - 5 models',
-//   points: 150,
-//   faction: 'Black Templars'
-// },
-// {
-//   id:
-
-//  'BLACK TEMPLARS-card18',
-//   name: 'Primaris Sword Brethren - 11 models',
-//   points: 330,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card19',
-//   name: 'The Emperor’s Champion - 1 model',
-//   points: 85,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card20',
-//   name: 'Righteous Crusaders - Perdition’s Edge',
-//   points: 15,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card21',
-//   name: 'Righteous Crusaders - Sigismund’s Seal',
-//   points: 20,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card22',
-//   name: 'Righteous Crusaders - Tännhauser’s Bones',
-//   points: 35,
-//   faction: 'Black Templars'
-// },
-// {
-//   id: 'BLACK TEMPLARS-card23',
-//   name: 'Righteous Crusaders - Witchseeker Bolts',
-//   points: 10,
-//   faction: 'Black Templars'
-// },
-
-// //Blood Angels
-
-// {
-//   id: 'BLOOD ANGELS-card1',
-//   name: 'Astorath - 1 model',
-//   points: 100,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card2',
-//   name: 'Baal Predator - 1 model',
-//   points: 125,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card3',
-//   name: 'Brother Corbulo - 1 model',
-//   points: 75,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card4',
-//   name: 'Captain Tycho - 1 model',
-//   points: 75,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card5',
-//   name: 'Chief Librarian Mephiston - 1 model',
-//   points: 120,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card6',
-//   name: 'Commander Dante - 1 model',
-//   points: 135,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card7',
-//   name: 'Death Company Dreadnought - 1 model',
-//   points: 195,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card8',
-//   name: 'Death Company Intercessors - 5 models',
-//   points: 90,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card9',
-//   name: 'Death Company Intercessors - 10 models',
-//   points: 180,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card10',
-//   name: 'Death Company Marines - 5 models',
-//   points: 130,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card11',
-//   name: 'Death Company Marines - 10 models',
-//   points: 260,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card12',
-//   name: 'Death Company Marines with Jump Packs - 5 models',
-//   points: 155,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card13',
-//   name: 'Death Company Marines with Jump Packs - 10 models',
-//   points: 310,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card14',
-//   name: 'Furioso Dreadnought - 1 model',
-//   points: 165,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card15',
-//   name: 'Gabriel Seth - 1 model',
-//   points: 110,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card16',
-//   name: 'Lemartes - 1 model',
-//   points: 135,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card17',
-//   name: 'Librarian Dreadnought - 1 model',
-//   points: 185,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card18',
-//   name: 'Sanguinary Guard - 5 models',
-//   points: 215,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card19',
-//   name: 'Sanguinary Guard - 10 models',
-//   points: 430,
-//   faction: 'Blood Angels'
-// },
-
-
-// {
-//   id: 'BLOOD ANGELS-card20',
-//   name: 'Sanguinary Priest - 1 model',
-//   points: 100,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card21',
-//   name: 'Sanguinary Priest with Jump Pack - 1 model',
-//   points: 110,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card22',
-//   name: 'The Sanguinor - 1 model',
-//   points: 160,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card23',
-//   name: 'Tycho the Lost - 1 model',
-//   points: 90,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card24',
-//   name: 'Sons of Sanguinius - Archangel’s Shard',
-//   points: 25,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card25',
-//   name: 'Sons of Sanguinius - Artisan of War',
-//   points: 20,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card26',
-//   name: 'Sons of Sanguinius - Icon of the Angel',
-//   points: 10,
-//   faction: 'Blood Angels'
-// },
-// {
-//   id: 'BLOOD ANGELS-card27',
-//   name: 'Sons of Sanguinius - Visage of Death',
-//   points: 15,
-//   faction: 'Blood Angels'
-// },
-
-// //Chaos Daemons
-
-// {
-//   id: 'CHAOS DAEMONS-card1',
-//   name: 'Beasts of Nurgle - 1 model',
-//   points: 75,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card2',
-//   name: 'Beasts of Nurgle - 2 models',
-//   points: 150,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card3',
-//   name: 'Be’lakor - 1 model',
-//   points: 325,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card4',
-//   name: 'Bloodcrushers - 3 models',
-//   points: 120,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card5',
-//   name: 'Bloodcrushers - 6 models',
-//   points: 240,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card6',
-//   name: 'Bloodletters - 10 models',
-//   points: 160,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card7',
-//   name: 'Bloodmaster - 1 model',
-//   points: 85,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card8',
-//   name: 'Bloodthirster - 1 model',
-//   points: 300,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card9',
-//   name: 'Blue Horrors - 10 models',
-//   points: 125,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card10',
-//   name: 'Burning Chariot - 1 model',
-//   points: 135,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card11',
-//   name: 'Changecaster - 1 model',
-//   points: 65,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card12',
-//   name: 'Contorted Epitome - 1 model',
-//   points: 85,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card13',
-//   name: 'Daemon Prince of Chaos - 1 model',
-//   points: 215,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card14',
-//   name: 'Daemon Prince of Chaos with Wings - 1 model',
-//   points: 195,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card15',
-//   name: 'Daemonettes - 10 models',
-//   points: 140,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card16',
-//   name: 'Epidemius - 1 model',
-//   points: 85,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card17',
-//   name: 'Exalted Flamer - 1 model',
-//   points: 70,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card18',
-//   name: 'Exalted Seeker Chariot - 1 model',
-//   points: 115,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card19',
-//   name: 'Fateskimmer - 1 model',
-//   points: 105,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card20',
-//   name: 'Feculent Gnarlmaw - 1 model',
-//   points: 100,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card21',
-//   name: 'Fiends - 3 models',
-//   points: 150,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card22',
-//   name: 'Fiends - 6 models',
-//   points: 300,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card23',
-//   name: 'Flamers - 3 models',
-//   points: 65,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card24',
-//   name: 'Flamers - 6 models',
-//   points: 130,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card25',
-//   name: 'Flesh Hounds - 5 models',
-//   points: 70,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card26',
-//   name: 'Flesh Hounds - 10 models',
-//   points: 140,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card27',
-//   name: 'Fluxmaster - 1 model',
-//   points: 60,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card28',
-//   name: 'Great Unclean One - 1 model',
-//   points: 280,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card29',
-//   name: 'Hellflayer - 1 model',
-//   points: 110,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card30',
-//   name: 'Hellflayer - 2 models',
-//   points: 220,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card31',
-//   name: 'Horticulous Slimux - 1 model',
-//   points: 120,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card32',
-//   name: 'Infernal Enrapturess - 1 model',
-//   points: 65,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card33',
-//   name: 'Kairos Fateweaver - 1 model',
-//   points: 285,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card34',
-//   name: 'Karanak - 1 model',
-//   points: 85,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card35',
-//   name: 'Keeper of Secrets - 1 model',
-//   points: 330,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card36',
-//   name: 'Lord of Change - 1 model',
-//   points: 230,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card37',
-//   name: 'Nurglings - 3 models',
-//   points: 40,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card38',
-//   name: 'Nurglings - 6 models',
-//   points: 80,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card39',
-//   name: 'Nurglings - 9 models',
-//   points: 120,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card40',
-//   name: 'Pink Horrors - 10 models',
-//   points: 140,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card41',
-//   name: 'Plague Drones - 3 models',
-//   points: 120,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card42',
-//   name: 'Plague Drones - 6 models',
-//   points: 240,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card43',
-//   name: 'Plaguebearers - 10 models',
-//   points: 145,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card44',
-//   name: 'Poxbringer - 1 model',
-//   points: 75,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card45',
-//   name: 'Rendmaster on Blood Throne - 1 model',
-//   points: 150,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card46',
-//   name: 'Rotigus - 1 model',
-//   points: 285,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card47',
-//   name: 'Screamers - 3 models',
-//   points: 90,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card48',
-//   name: 'Screamers - 6 models',
-//   points: 180,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card49',
-//   name: 'Seeker Chariot - 1 model',
-//   points: 75,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card50',
-//   name: 'Seeker Chariot - 2 models',
-//   points: 150,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card51',
-//   name: 'Seekers - 5 models',
-//   points: 95,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card52',
-//   name: 'Seekers - 10 models',
-//   points: 190,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card53',
-//   name: 'Shalaxi Helbane - 1 model',
-//   points: 400,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card54',
-//   name: 'Skarbrand - 1 model',
-//   points: 365,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card55',
-//   name: 'Skull Altar - 1 model',
-//   points: 105,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card56',
-//   name: 'Skull Cannon - 1 model',
-//   points: 115,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card57',
-//   name: 'Skullmaster - 1 model',
-//   points: 105,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card58',
-//   name: 'Skulltaker - 1 model',
-//   points: 95,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card59',
-//   name: 'Sloppity Bilepiper - 1 model',
-//   points: 55,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card60',
-//   name: 'Soul Grinder - 1 model',
-//   points: 215,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card61',
-//   name: 'Spoilpox Scrivener - 1 model',
-//   points: 65,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card62',
-//   name: 'Syll’esske - 1 model',
-//   points: 140,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card63',
-//   name: 'The Blue Scribes - 1 model',
-//   points: 65,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card64',
-//   name: 'The Changeling - 1 model',
-//   points: 75,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card65',
-//   name: 'The Masque of Slaanesh - 1 model',
-//   points: 105,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card66',
-//   name: 'Tormentbringer on Exalted Seeker Chariot - 1 model',
-//   points: 160,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card67',
-//   name: 'Tranceweaver - 1 model',
-//   points: 60,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card68',
-//   name: 'Daemonic Incursion',
-//   points: 20,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card69',
-//   name: 'Daemonic Incursion - Soulstealer',
-//   points: 15,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card70',
-//   name: 'Daemonic Incursion - The Endless Gift',
-//   points: 30,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS DAEMONS-card71',
-//   name: 'Daemonic Incursion - The Everstave',
-//   points: 25,
-//   faction: 'Chaos Daemons'
-// },
-// {
-//   id: 'CHAOS KNIGHTS-card1',
-//   name: 'Knight Abominant - 1 model',
-//   points: 395,
-//   faction: 'Chaos Knights'
-// },
-// {
-//   id: 'CHAOS KNIGHTS-card2',
-//   name: 'Knight Desecrator - 1 model',
-//   points: 390,
-//   faction: 'Chaos Knights'
-// },
-// {
-//   id: 'CHAOS KNIGHTS-card3',
-//   name: 'Knight Despoiler - 1 model',
-//   points: 410,
-//   faction: 'Chaos Knights'
-// },
-// {
-//   id: 'CHAOS KNIGHTS-card4',
-//   name: 'Knight Rampager - 1 model',
-//   points: 395,
-//   faction: 'Chaos Knights'
-// },
-// {
-//   id: 'CHAOS KNIGHTS-card5',
-//   name: 'Knight Tyrant - 1 model',
-//   points: 485,
-//   faction: 'Chaos Knights'
-// },
-// {
-//   id: 'CHAOS KNIGHTS-card6',
-//   name: 'War Dog Brigand - 1 model',
-//   points: 150,
-//   faction: 'Chaos Knights'
-// },
-// {
-//   id: 'CHAOS KNIGHTS-card7',
-//   name: 'War Dog Executioner - 1 model',
-//   points: 135,
-//   faction: 'Chaos Knights'
-// },
-// {
-//   id: 'CHAOS KNIGHTS-card8',
-//   name: 'War Dog Huntsman - 1 model',
-//   points: 140,
-//   faction: 'Chaos Knights'
-// },
-// {
-//   id: 'CHAOS KNIGHTS-card9',
-//   name: 'War Dog Karnivore - 1 model',
-//   points: 160,
-//   faction: 'Chaos Knights'
-// },
-// {
-//   id: 'CHAOS KNIGHTS-card10',
-//   name: 'War Dog Stalker - 1 model',
-//   points: 135,
-//   faction: 'Chaos Knights'
-// },
-// {
-//   id: 'CHAOS KNIGHTS-card11',
-//   name: 'Traitoris Lance',
-//   points: 35,
-//   faction: 'Chaos Knights'
-// },
-// {
-//   id: 'CHAOS KNIGHTS-card12',
-//   name: 'Traitoris Lance - Lord of Dread',
-//   points: 25,
-//   faction: 'Chaos Knights'
-// },
-// {
-//   id: 'CHAOS KNIGHTS-card13',
-//   name: 'Traitoris Lance - Aura of Terror',
-//   points: 30,
-//   faction: 'Chaos Knights'
-// },
-// {
-//   id: 'CHAOS KNIGHTS-card14',
-//   name: 'Traitoris Lance - The Traitor’s Mark',
-//   points: 40,
-//   faction: 'Chaos Knights'
-// },
-
-// //CSM
-
-// {
-//   id: 'CHAOS SPACE MARINES-card1',
-//   name: 'Abaddon the Despoiler - 1 model',
-//   points: 280,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card2',
-//   name: 'Accursed Cultists - 8 models',
-//   points: 95,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card3',
-//   name: 'Accursed Cultists - 16 models',
-//   points: 190,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card4',
-//   name: 'Chaos Bikers - 3 models',
-//   points: 95,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card5',
-//   name: 'Chaos Bikers - 6 models',
-//   points: 190,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card6',
-//   name: 'Chaos Land Raider - 1 model',
-//   points: 255,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card7',
-//   name: 'Chaos Lord - 1 model',
-//   points: 75,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card8',
-//   name: 'Chaos Lord in Terminator Armour - 1 model',
-//   points: 100,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card9',
-//   name: 'Chaos Predator Annihilator - 1 model',
-//   points: 135,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card10',
-//   name: 'Chaos Predator Destructor - 1 model',
-//   points: 130,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card11',
-//   name: 'Chaos Rhino - 1 model',
-//   points: 85,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card12',
-//   name: 'Chaos Spawn - 2 models',
-//   points: 80,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card13',
-//   name: 'Chaos Terminator Squad - 5 models',
-//   points: 195,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card14',
-//   name: 'Chaos Terminator Squad - 10 models',
-//   points: 390,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card15',
-//   name: 'Chaos Vindicator - 1 model',
-//   points: 210,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card16',
-//   name: 'Chosen - 5 models',
-//   points: 115,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card17',
-//   name: 'Chosen - 10 models',
-//   points: 230,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card18',
-//   name: 'Cultist Mob - 10 models',
-//   points: 55,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card19',
-//   name: 'Cultist Mob - 20 models',
-//   points: 110,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card20',
-//   name: 'Cypher - 1 model',
-//   points: 105,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card21',
-//   name: 'Dark Apostle - 3 models',
-//   points: 85,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card22',
-//   name: 'Dark Commune - 5 models',
-//   points: 55,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card23',
-//   name: 'Defiler - 1 model',
-//   points: 210,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card24',
-//   name: 'Exalted Champion - 1 model',
-//   points: 70,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card25',
-//   name: 'Fabius Bile - 2 models',
-//   points: 100,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card26',
-//   name: 'Fellgor Beastmen - 10 models',
-//   points: 95,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card27',
-//   name: 'Forgefiend - 1 model',
-//   points: 165,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card28',
-//   name: 'Haarken Worldclaimer - 1 model',
-//   points: 120,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card29',
-//   name: 'Havocs - 5 models',
-//   points: 135,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card30',
-//   name: 'Helbrute - 1 model',
-//   points: 155,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card31',
-//   name: 'Heldrake - 1 model',
-//   points: 205,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card32',
-//   name: 'Heretic Astartes Daemon Prince - 1 model',
-//   points: 180,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card33',
-//   name: 'Heretic Astartes Daemon Prince with Wings - 1 model',
-//   points: 195,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card34',
-//   name: 'Huron Blackheart - 1 model',
-//   points: 80,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card35',
-//   name: 'Khorne Lord of Skulls - 1 model',
-//   points: 420,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card36',
-//   name: 'Legionaries - 5 models',
-//   points: 100,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card37',
-//   name: 'Legionaries - 10 models',
-//   points: 200,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card38',
-//   name: 'Lord Discordant on Helstalker - 1 model',
-//   points: 220,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card39',
-//   name: 'Lucius the Eternal - 1 model',
-//   points: 95,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card40',
-//   name: 'Master of Executions - 1 model',
-//   points: 80,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card41',
-//   name: 'Master of Possession - 1 model',
-//   points: 70,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card42',
-//   name: 'Maulerfiend - 1 model',
-//   points: 155,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card43',
-//   name: 'Noctilith Crown - 1 model',
-//   points: 125,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card44',
-//   name: 'Noise Marines - 5 models',
-//   points: 85,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card45',
-//   name: 'Noise Marines - 10 models',
-//   points: 170,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card46',
-//   name: 'Obliterators - 2 models',
-//   points: 160,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card47',
-//   name: 'Obliterators - 4 models',
-//   points: 320,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card48',
-//   name: 'Possessed - 5 models',
-//   points: 145,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card49',
-//   name: 'Possessed - 10 models',
-//   points: 290,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card50',
-//   name: 'Raptors - 5 models',
-//   points: 95,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card51',
-//   name: 'Raptors - 10 models',
-//   points: 190,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card52',
-//   name: 'Sorcerer - 1 model',
-//   points: 60,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card53',
-//   name: 'Sorcerer in Terminator Armour - 1 model',
-//   points: 90,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card54',
-//   name: 'Traitor Enforcer - 2 models',
-//   points: 65,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card55',
-//   name: 'Traitor Guardsmen Squad - 10 models',
-//   points: 70,
-//   faction: 'Chaos Space Marines'
-// },
-
-
-// {
-//   id: 'CHAOS SPACE MARINES-card56',
-//   name: 'Vashtorr the Arkifane - 1 model',
-//   points: 225,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card57',
-//   name: 'Venomcrawler - 1 model',
-//   points: 140,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card58',
-//   name: 'Warp Talons - 5 models',
-//   points: 130,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card59',
-//   name: 'Warp Talons - 10 models',
-//   points: 260,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card60',
-//   name: 'Warpsmith - 1 model',
-//   points: 70,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card61',
-//   name: 'Slaves to Darkness - Eye of Tzeentch',
-//   points: 30,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card62',
-//   name: 'Slaves to Darkness - Intoxicating Elixir',
-//   points: 15,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card63',
-//   name: 'Slaves to Darkness - Liber Hereticus',
-//   points: 40,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card64',
-//   name: 'Slaves to Darkness - Orbs of Unlife',
-//   points: 25,
-//   faction: 'Chaos Space Marines'
-// },
-// {
-//   id: 'CHAOS SPACE MARINES-card65',
-//   name: 'Slaves to Darkness - Talisman of Burning Blood',
-//   points: 20,
-//   faction: 'Chaos Space Marines'
-// },
-
-
-// //TYRANIDS
-
-
-//   {
-//     id: 'TYRANIDS-unitCard1',
-//     name: 'Barbgaunts (5 models)',
-//     points: 50,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard2',
-//     name: 'Barbgaunts (10 models)',
-//     points: 100,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard3',
-//     name: 'Biovores (1 model)',
-//     points: 40,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard4',
-//     name: 'Biovores (2 models)',
-//     points: 80,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard5',
-//     name: 'Biovores (3 models)',
-//     points: 120,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard6',
-//     name: 'Broodlord (1 model)',
-//     points: 100,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard7',
-//     name: 'Carnifexes (1 model)',
-//     points: 125,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard8',
-//     name: 'Carnifexes (2 models)',
-//     points: 250,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard9',
-//     name: 'Deathleaper (1 model)',
-//     points: 80,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard10',
-//     name: 'Exocrine (1 model)',
-//     points: 135,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard11',
-//     name: 'Gargoyles (10 models)',
-//     points: 75,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard12',
-//     name: 'Gargoyles (20 models)',
-//     points: 150,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard13',
-//     name: 'Genestealers (5 models)',
-//     points: 90,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard14',
-//     name: 'Genestealers (10 models)',
-//     points: 180,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard15',
-//     name: 'Harpy (1 model)',
-//     points: 170,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard16',
-//     name: 'Haruspex (1 model)',
-//     points: 125,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard17',
-//     name: 'Hive Crone (1 model)',
-//     points: 200,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard18',
-//     name: 'Hive Guard (3 models)',
-//     points: 100,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard19',
-//     name: 'Hive Guard (6 models)',
-//     points: 200,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard20',
-//     name: 'Hive Tyrant (1 model)',
-//     points: 220,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard21',
-//     name: 'Hormagaunts (10 models)',
-//     points: 70,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard22',
-//     name: 'Hormagaunts (20 models)',
-//     points: 140,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard23',
-//     name: 'Lictor (1 model)',
-//     points: 75,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard24',
-//     name: 'Maleceptor (1 model)',
-//     points: 165,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard25',
-//     name: 'Mawloc (1 model)',
-//     points: 145,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard26',
-//     name: 'Mucolid Spores (1 model)',
-//     points: 45,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard27',
-//     name: 'Mucolid Spores (2 models)',
-//     points: 90,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard28',
-//     name: 'Neurogaunts (11 models)',
-//     points: 45,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard29',
-//     name: 'Neurogaunts (22 models)',
-//     points: 90,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard30',
-//     name: 'Neurotyrant (1 model)',
-//     points: 105,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard31',
-//     name: 'Old One Eye (1 model)',
-//     points: 140,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard32',
-//     name: 'Parasite of Mortrex (1 model)',
-//     points: 90,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard33',
-//     name: 'Psychophage (1 model)',
-//     points: 125,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard34',
-//     name: 'Pyrovores (1 model)',
-//     points: 30,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard35',
-//     name: 'Pyrovores (2 models)',
-//     points: 60,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard36',
-//     name: 'Pyrovores (3 models)',
-//     points: 90,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard37',
-//     name: 'Raveners (3 models)',
-//     points: 75,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard38',
-//     name: 'Raveners (6 models)',
-//     points: 150,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard39',
-//     name: 'Ripper Swarms (3 models)',
-//     points: 35,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard40',
-//     name: 'Ripper Swarms (6 models)',
-//     points: 70,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard41',
-//     name: 'Screamer-Killer (1 model)',
-//     points: 180,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard42',
-//     name: 'Spore Mines (3 models)',
-//     points: 50,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard43',
-//     name: 'Spore Mines (6 models)',
-//     points: 100,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard44',
-//     name: 'Sporocyst (1 model)',
-//     points: 145,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard45',
-//     name: 'Termagants (10 models)',
-//     points: 60,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard46',
-//     name: 'Termagants (20 models)',
-//     points: 120,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard47',
-//     name: 'Tervigon (1 model)',
-//     points: 200,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard48',
-//     name: 'The Swarmlord (1 model)',
-//     points: 250,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard49',
-//     name: 'Toxicrene (1 model)',
-//     points: 200,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard50',
-//     name: 'Trygon (1 model)',
-//     points: 180,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard51',
-//     name: 'Tyranid Warriors with Melee Bio-weapons (3 models)',
-//     points: 90,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard52',
-//     name: 'Tyranid Warriors with Melee Bio-weapons (6 models)',
-//     points: 180,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard53',
-//     name: 'Tyranid Warriors with Ranged Bio-weapons (3 models)',
-//     points: 70,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard54',
-//     name: 'Tyranid Warriors with Ranged Bio-weapons (6 models)',
-//     points: 140,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard55',
-//     name: 'Tyrannocyte (1 model)',
-//     points: 105,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard56',
-//     name: 'Tyrannofex (1 model)',
-//     points: 200,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard57',
-//     name: 'Tyrant Guard (3 models)',
-//     points: 95,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard58',
-//     name: 'Tyrant Guard (6 models)',
-//     points: 190,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard59',
-//     name: 'Venomthropes (3 models)',
-//     points: 70,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard60',
-//     name: 'Venomthropes (6 models)',
-//     points: 140,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard61',
-//     name: 'Von Ryan’s Leapers (3 models)',
-//     points: 75,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard62',
-//     name: 'Von Ryan’s Leapers (6 models)',
-//     points: 150,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard63',
-//     name: 'Winged Hive Tyrant (1 model)',
-//     points: 195,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard64',
-//     name: 'Winged Tyranid Prime (1 model)',
-//     points: 80,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard65',
-//     name: 'Zoanthropes (3 models)',
-//     points: 90,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-unitCard66',
-//     name: 'Zoanthropes (6 models)',
-//     points: 180,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-enhancement1',
-//     name: 'Invasion Fleet - Adaptive Biology',
-//     points: 25,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-enhancement2',
-//     name: 'Invasion Fleet - Alien Cunning',
-//     points: 30,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-enhancement3',
-//     name: 'Invasion Fleet - Perfectly Adapted',
-//     points: 15,
-//     faction: 'TYRANIDS'
-//   },
-//   {
-//     id: 'TYRANIDS-enhancement4',
-//     name: 'Invasion Fleet - Synaptic Linchpin',
-//     points: 10,
-//     faction: 'TYRANIDS'
-//   },
-
-//   //GSC
-
-
-  // GENESTEALER CULTS
-  {
-    id: 'GENESTEALER CULTS-card1',
-    name: 'Aberrants - 5 models',
-    points: 165,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card2',
-    name: 'Aberrants - 10 models',
-    points: 330,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card3',
-    name: 'Abominant - 1 model',
-    points: 75,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card4',
-    name: 'Achilles Ridgerunners - 1 model',
-    points: 75,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card5',
-    name: 'Achilles Ridgerunners - 2 models',
-    points: 150,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card6',
-    name: 'Acolyte Hybrids - 5 models',
-    points: 75,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card7',
-    name: 'Acolyte Hybrids - 10 models',
-    points: 150,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card8',
-    name: 'Acolyte Iconward - 1 model',
-    points: 50,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card9',
-    name: 'Atalan Jackals - 5 models',
-    points: 80,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card10',
-    name: 'Atalan Jackals - 10 models',
-    points: 160,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card11',
-    name: 'Biophagus - 1 model',
-    points: 50,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card12',
-    name: 'Clamavus - 1 model',
-    points: 40,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card13',
-    name: 'Goliath Rockgrinder - 1 model',
-    points: 155,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card14',
-    name: 'Goliath Truck - 1 model',
-    points: 110,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card15',
-    name: 'Hybrid Metamorphs - 5 models',
-    points: 80,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card16',
-    name: 'Hybrid Metamorphs - 10 models',
-    points: 160,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card17',
-    name: 'Jackal Alphus - 1 model',
-    points: 60,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card18',
-    name: 'Kelermorph - 1 model',
-    points: 55,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card19',
-    name: 'Locus - 1 model',
-    points: 40,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card20',
-    name: 'Magus - 1 model',
-    points: 50,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card21',
-    name: 'Neophyte Hybrids - 10 models',
-    points: 80,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card22',
-    name: 'Neophyte Hybrids - 20 models',
-    points: 160,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card23',
-    name: 'Nexos - 1 model',
-    points: 50,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card24',
-    name: 'Patriarch - 1 model',
-    points: 85,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card25',
-    name: 'Primus - 1 model',
-    points: 70,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card26',
-    name: 'Purestrain Genestealers - 5 models',
-    points: 90,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card27',
-    name: 'Purestrain Genestealers - 10 models',
-    points: 180,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card28',
-    name: 'Reductus Saboteur - 1 model',
-    points: 55,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-card29',
-    name: 'Sanctus - 1 model',
-    points: 50,
-    faction: 'Genestealer Cults'
-  },{
-    id: 'GENESTEALER CULTS-enhancement1',
-    name: 'Ascension Day - Focus of Adoration',
-    points: 10,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-enhancement2',
-    name: 'Ascension Day - Inscrutable Cunning',
-    points: 30,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-enhancement3',
-    name: 'Ascension Day - Meticulous Planner',
-    points: 40,
-    faction: 'Genestealer Cults'
-  },
-  {
-    id: 'GENESTEALER CULTS-enhancement4',
-    name: 'Ascension Day - Prowling Agitant',
-    points: 15,
-    faction: 'Genestealer Cults'
-  },
-
-  //CUSTODES
-
+  <div class="unit-card" id="unitCard1" draggable="false" ondragstart="drag(event)" data-name="Barbgaunts 5" data-points="50">
+    <b>Barbgaunts 5 - 50pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Barbgaunts 5', 50)">Add</a>
+  </div>
   
+  <div class="unit-card" id="unitCard2" draggable="false" ondragstart="drag(event)" data-name="Barbgaunts 10" data-points="100">
+    <b>Barbgaunts 10 - 100pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Barbgaunts 10', 100)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard3" draggable="false" ondragstart="drag(event)" data-name="Biovores 1" data-points="40">
+    <b>Biovores 1 - 40pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Biovores 1', 40)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard4" draggable="false" ondragstart="drag(event)" data-name="Biovores 2" data-points="80">
+    <b>Biovores 2 - 80pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Biovores 2', 80)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard5" draggable="false" ondragstart="drag(event)" data-name="Biovores 3" data-points="120">
+    <b>Biovores 3 - 120pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Biovores 3', 120)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard6" draggable="false" ondragstart="drag(event)" data-name="Broodlord 1" data-points="100">
+    <b>Broodlord 1 - 100pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Broodlord 1', 100)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard7" draggable="false" ondragstart="drag(event)" data-name="Carnifexes 1" data-points="125">
+    <b>Carnifexes 1 - 125pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Carnifexes 1', 125)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard8" draggable="false" ondragstart="drag(event)" data-name="Carnifexes 2" data-points="250">
+    <b>Carnifexes 2 - 250pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Carnifexes 2', 250)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard9" draggable="false" ondragstart="drag(event)" data-name="Deathleaper 1" data-points="80">
+    <b>Deathleaper 1 - 80pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Deathleaper 1', 80)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard10" draggable="false" ondragstart="drag(event)" data-name="Exocrine 1" data-points="135">
+    <b>Exocrine 1 - 135pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Exocrine 1', 135)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard11" draggable="false" ondragstart="drag(event)" data-name="Gargoyles 10" data-points="75">
+    <b>Gargoyles 10 - 75pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Gargoyles 10', 75)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard12" draggable="false" ondragstart="drag(event)" data-name="Gargoyles 20" data-points="150">
+    <b>Gargoyles 20 - 150pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Gargoyles 20', 150)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard13" draggable="false" ondragstart="drag(event)" data-name="Genestealers 5" data-points="90">
+    <b>Genestealers 5 - 90pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Genestealers 5', 90)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard14" draggable="false" ondragstart="drag(event)" data-name="Genestealers 10" data-points="180">
+    <b>Genestealers 10 - 180pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Genestealers 10', 180)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard15" draggable="false" ondragstart="drag(event)" data-name="Harpy 1" data-points="170">
+    <b>Harpy 1 - 170pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Harpy 1', 170)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard16" draggable="false" ondragstart="drag(event)" data-name="Haruspex 1" data-points="125">
+    <b>Haruspex 1 - 125pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Haruspex 1', 125)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard17" draggable="false" ondragstart="drag(event)" data-name="Hive Crone 1" data-points="200">
+    <b>Hive Crone 1 - 200pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Hive Crone 1', 200)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard18" draggable="false" ondragstart="drag(event)" data-name="Hive Guard 3" data-points="100">
+    <b>Hive Guard 3 - 100pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Hive Guard 3', 100)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard19" draggable="false" ondragstart="drag(event)" data-name="Hive Guard 6" data-points="200">
+    <b>Hive Guard 6 - 200pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Hive Guard 6', 200)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard20" draggable="false" ondragstart="drag(event)" data-name="Hive Tyrant 1" data-points="220">
+    <b>Hive Tyrant 1 - 220pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Hive Tyrant 1', 220)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard21" draggable="false" ondragstart="drag(event)" data-name="Hormagaunts 10" data-points="70">
+    <b>Hormagaunts 10 - 70pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Hormagaunts 10', 70)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard22" draggable="false" ondragstart="drag(event)" data-name="Hormagaunts 20" data-points="140">
+    <b>Hormagaunts 20 - 140pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Hormagaunts 20', 140)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard23" draggable="false" ondragstart="drag(event)" data-name="Lictor 1" data-points="75">
+    <b>Lictor 1 - 75pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Lictor 1', 75)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard24" draggable="false" ondragstart="drag(event)" data-name="Maleceptor 1" data-points="165">
+    <b>Maleceptor 1 - 165pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Maleceptor 1', 165)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard26" draggable="false" ondragstart="drag(event)" data-name="Mawloc  1" data-points="145">
+    <b>Mawloc  1 - 145pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Mawloc  1', 145)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard27" draggable="false" ondragstart="drag(event)" data-name="Mucolid Spores  1" data-points="45">
+    <b>Mucolid Spores  1 - 45pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Mucolid Spores  1', 45)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard28" draggable="false" ondragstart="drag(event)" data-name="Mucolid Spores  2" data-points="90">
+    <b>Mucolid Spores  2 - 90pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Mucolid Spores  2', 90)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard29" draggable="false" ondragstart="drag(event)" data-name="Neurogaunts  11" data-points="45">
+    <b>Neurogaunts  11 - 45pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Neurogaunts  11', 45)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard30" draggable="false" ondragstart="drag(event)" data-name="Neurogaunts  22" data-points="90">
+    <b>Neurogaunts  22 - 90pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Neurogaunts  22', 90)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard31" draggable="false" ondragstart="drag(event)" data-name="Neurotyrant  1" data-points="105">
+    <b>Neurotyrant  1 - 105pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Neurotyrant  1', 105)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard32" draggable="false" ondragstart="drag(event)" data-name="Old One Eye  1" data-points="140">
+    <b>Old One Eye  1 - 140pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Old One Eye  1', 140)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard33" draggable="false" ondragstart="drag(event)" data-name="Parasite of Mortrex  1" data-points="90">
+    <b>Parasite of Mortrex  1 - 90pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Parasite of Mortrex  1', 90)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard34" draggable="false" ondragstart="drag(event)" data-name="Psychophage  1" data-points="125">
+    <b>Psychophage  1 - 125pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Psychophage  1', 125)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard35" draggable="false" ondragstart="drag(event)" data-name="Pyrovores  1" data-points="30">
+    <b>Pyrovores  1 - 30pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Pyrovores  1', 30)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard36" draggable="false" ondragstart="drag(event)" data-name="Pyrovores  2" data-points="60">
+    <b>Pyrovores  2 - 60pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Pyrovores  2', 60)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard37" draggable="false" ondragstart="drag(event)" data-name="Pyrovores  3" data-points="90">
+    <b>Pyrovores  3 - 90pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Pyrovores  3', 90)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard38" draggable="false" ondragstart="drag(event)" data-name="Raveners  3" data-points="75">
+    <b>Raveners  3 - 75pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Raveners  3', 75)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard39" draggable="false" ondragstart="drag(event)" data-name="Raveners  6" data-points="150">
+    <b>Raveners  6 - 150pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Raveners  6', 150)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard40" draggable="false" ondragstart="drag(event)" data-name="Ripper Swarms  3" data-points="35">
+    <b>Ripper Swarms  3 - 35pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Ripper Swarms  3', 35)">Add</a>
+  </div>
+  
+  <div class="unit-card" id="unitCard41" draggable="false" ondragstart="drag(event)" data-name="Ripper Swarms 6" data-points="70">
+    <b>Ripper Swarms 6 - 70pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Ripper Swarms 6', 70)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard42" draggable="false" ondragstart="drag(event)" data-name="ScreamerKiller 1" data-points="180">
+    <b>ScreamerKiller 1 - 180pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('ScreamerKiller 1', 180)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard43" draggable="false" ondragstart="drag(event)" data-name="Spore Mines 3" data-points="50">
+    <b>Spore Mines 3 - 50pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Spore Mines 3', 50)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard44" draggable="false" ondragstart="drag(event)" data-name="Spore Mines 6" data-points="100">
+    <b>Spore Mines 6 - 100pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Spore Mines 6', 100)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard45" draggable="false" ondragstart="drag(event)" data-name="Sporocyst 1" data-points="145">
+    <b>Sporocyst 1 - 145pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Sporocyst 1', 145)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard46" draggable="false" ondragstart="drag(event)" data-name="Termagants 10" data-points="60">
+    <b>Termagants 10 - 60pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Termagants 10', 60)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard47" draggable="false" ondragstart="drag(event)" data-name="Termagants 20" data-points="120">
+    <b>Termagants 20 - 120pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Termagants 20', 120)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard48" draggable="false" ondragstart="drag(event)" data-name="Tervigon 1" data-points="200">
+    <b>Tervigon 1 - 200pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tervigon 1', 200)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard49" draggable="false" ondragstart="drag(event)" data-name="The Swarmlord 1" data-points="250">
+    <b>The Swarmlord 1 - 250pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('The Swarmlord 1', 250)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard50" draggable="false" ondragstart="drag(event)" data-name="Toxicrene 1" data-points="200">
+    <b>Toxicrene 1 - 200pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Toxicrene 1', 200)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard51" draggable="false" ondragstart="drag(event)" data-name="Trygon 1" data-points="180">
+    <b>Trygon 1 - 180pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Trygon 1', 180)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard52" draggable="false" ondragstart="drag(event)" data-name="Tyranid Warriors with Melee Bioweapons 3" data-points="90">
+    <b>Tyranid Warriors with Melee Bioweapons 3 - 90pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyranid Warriors with Melee Bioweapons 3', 90)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard53" draggable="false" ondragstart="drag(event)" data-name="Tyranid Warriors with Melee Bioweapons 6" data-points="180">
+    <b>Tyranid Warriors with Melee Bioweapons 6 - 180pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyranid Warriors with Melee Bioweapons 6', 180)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard54" draggable="false" ondragstart="drag(event)" data-name="Tyranid Warriors with Ranged Bioweapons 3" data-points="70">
+    <b>Tyranid Warriors with Ranged Bioweapons 3 - 70pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyranid Warriors with Ranged Bioweapons 3', 70)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard55" draggable="false" ondragstart="drag(event)" data-name="Tyranid Warriors with Ranged Bioweapons 6" data-points="140">
+    <b>Tyranid Warriors with Ranged Bioweapons 6 - 140pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyranid Warriors with Ranged Bioweapons 6', 140)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard56" draggable="false" ondragstart="drag(event)" data-name="Tyrannocyte 1" data-points="105.00">
+    <b>Tyrannocyte 1 - 105.00pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyrannocyte 1', 105.00)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard57" draggable="false" ondragstart="drag(event)" data-name="Tyrannofex 1" data-points="200">
+    <b>Tyrannofex 1 - 200pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyrannofex 1', 200)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard58" draggable="false" ondragstart="drag(event)" data-name="Tyrant Guard 3" data-points="95">
+    <b>Tyrant Guard 3 - 95pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyrant Guard 3', 95)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard59" draggable="false" ondragstart="drag(event)" data-name="Tyrant Guard 6" data-points="190">
+    <b>Tyrant Guard 6 - 190pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Tyrant Guard 6', 190)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard60" draggable="false" ondragstart="drag(event)" data-name="Venomthropes 3" data-points="70">
+    <b>Venomthropes 3 - 70pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Venomthropes 3', 70)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard61" draggable="false" ondragstart="drag(event)" data-name="Venomthropes 6" data-points="140">
+    <b>Venomthropes 6 - 140pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Venomthropes 6', 140)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard62" draggable="false" ondragstart="drag(event)" data-name="Von Ryan’s Leapers 3" data-points="75">
+    <b>Von Ryan’s Leapers 3 - 75pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Von Ryan’s Leapers 3', 75)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard63" draggable="false" ondragstart="drag(event)" data-name="Von Ryan’s Leapers 6" data-points="150">
+    <b>Von Ryan’s Leapers 6 - 150pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Von Ryan’s Leapers 6', 150)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard64" draggable="false" ondragstart="drag(event)" data-name="Winged Hive Tyrant 1" data-points="195">
+    <b>Winged Hive Tyrant 1 - 195pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Winged Hive Tyrant 1', 195)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard65" draggable="false" ondragstart="drag(event)" data-name="Winged Tyranid Prime 1" data-points="80">
+    <b>Winged Tyranid Prime 1 - 80pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Winged Tyranid Prime 1', 80)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard66" draggable="false" ondragstart="drag(event)" data-name="Zoanthropes 3" data-points="90">
+    <b>Zoanthropes 3 - 90pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Zoanthropes 3', 90)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard67" draggable="false" ondragstart="drag(event)" data-name="Zoanthropes 6" data-points="180">
+    <b>Zoanthropes 6 - 180pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Zoanthropes 6', 180)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard68" draggable="false" ondragstart="drag(event)" data-name="Invasion Fleet  Adaptive Biology" data-points="25">
+    <b>Invasion Fleet  Adaptive Biology - 25pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Invasion Fleet  Adaptive Biology', 25)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard69" draggable="false" ondragstart="drag(event)" data-name="Invasion Fleet  Alien Cunning" data-points="30">
+    <b>Invasion Fleet  Alien Cunning - 30pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Invasion Fleet  Alien Cunning', 30)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard70" draggable="false" ondragstart="drag(event)" data-name="Invasion Fleet  Perfectly Adapted" data-points="15">
+    <b>Invasion Fleet  Perfectly Adapted - 15pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Invasion Fleet  Perfectly Adapted', 15)">Add</a>
+  </div>
+  <div class="unit-card" id="unitCard71" draggable="false" ondragstart="drag(event)" data-name="Invasion Fleet  Synaptic Linchpin" data-points="10">
+    <b>Invasion Fleet  Synaptic Linchpin - 10pts</b>
+    <a href="#" class="add-link" onclick="addToRoster('Invasion Fleet  Synaptic Linchpin', 10)">Add</a>
+  </div>
 
-
-
-
-
-];
-
-
+  <script>
     function drag(event) {
       event.dataTransfer.setData("text/plain", event.target.id);
     }
@@ -3988,6 +402,7 @@ const unitCards = [
       unitCard.appendChild(deleteButton);
       roster.appendChild(unitCard);
       calculateTotalPoints();
+      filterUnitCards();
       closeExportRoster();
     }
 
@@ -4001,30 +416,18 @@ const unitCards = [
       clonedCard.appendChild(deleteButton);
       roster.appendChild(clonedCard);
       calculateTotalPoints();
+      filterUnitCards();
     }
 
-    function createUnitCard(name, points, faction) {
+    function createUnitCard(name, points) {
       const unitCard = document.createElement("div");
       unitCard.className = "unit-card";
-      unitCard.setAttribute("id", `unitCard${unitCards.length + 1}`);
-      unitCard.setAttribute("draggable", "false");
-      unitCard.setAttribute("ondragstart", "drag(event)");
       unitCard.setAttribute("data-name", name);
       unitCard.setAttribute("data-points", points);
-      unitCard.setAttribute("data-faction", faction);
 
       const unitName = document.createElement("b");
       unitName.textContent = name + " - " + points + "pts";
       unitCard.appendChild(unitName);
-
-      const addItemLink = document.createElement("a");
-      addItemLink.href = "#";
-      addItemLink.className = "add-link";
-      addItemLink.textContent = " - ADD";
-      addItemLink.onclick = function () {
-        addToRoster(name, points);
-      };
-      unitCard.appendChild(addItemLink);
 
       return unitCard;
     }
@@ -4055,40 +458,18 @@ const unitCards = [
     function filterUnitCards() {
       const filterInput = document.getElementById("filter");
       const filterValue = filterInput.value.toLowerCase();
-      const factionDropdown = document.getElementById("faction");
-      const factionValue = factionDropdown.value.toLowerCase();
       const unitCards = document.getElementsByClassName("unit-card");
-
-      // Clear the roster if the faction dropdown is changed to the default selection
-      if (factionValue === "") {
-        clearRoster();
-        document.getElementById("totalPoints").textContent = "Total Points: 0"; // Reset the total points to 0
-        closeExportRoster(); // Hide the export roster
-        document.getElementById("exportTextarea").value = ""; // Reset the export roster text
-        return;
-      }
 
       for (let i = 0; i < unitCards.length; i++) {
         const unitCard = unitCards[i];
         const unitName = unitCard.getAttribute("data-name").toLowerCase();
-        const unitFaction = unitCard.getAttribute("data-faction").toLowerCase();
         const inRoster = unitCard.parentElement.id === "roster";
 
-        if (
-          (unitName.includes(filterValue) || filterValue === "") &&
-          (unitFaction === factionValue || factionValue === "") &&
-          (factionValue !== "" || inRoster)
-        ) {
+        if (unitName.includes(filterValue) || inRoster) {
           unitCard.style.display = "block";
         } else {
           unitCard.style.display = "none";
         }
-      }
-
-      // Show the selected units in the roster
-      const selectedUnits = document.getElementById("roster").getElementsByClassName("unit-card");
-      for (let i = 0; i < selectedUnits.length; i++) {
-        selectedUnits[i].style.display = "block";
       }
     }
 
@@ -4111,13 +492,13 @@ const unitCards = [
         const unitCard = unitCards[i];
         const name = unitCard.getAttribute("data-name");
         const points = unitCard.getAttribute("data-points");
-        rosterText += name + " - " + points + " pts" + "\n";
+        rosterText += name + " - " + points + " pts"+"\n";
         totalPoints += parseInt(points);
       }
 
       const exportContainer = document.getElementsByClassName("export-container")[0];
       const exportTextarea = exportContainer.querySelector("#exportTextarea");
-      exportTextarea.value = rosterText + "Total Points: " + totalPoints + " pts";
+      exportTextarea.value = rosterText + "Total Points: " + totalPoints+" pts";
       exportContainer.style.display = "block";
     }
 
@@ -4128,33 +509,9 @@ const unitCards = [
       exportButton.style.display = "block";
     }
 
-    function clearRoster() {
-      const roster = document.getElementById("roster");
-      roster.innerHTML = ""; // Clear the roster by removing all its child elements
-      calculateTotalPoints();
-    }
-
     const roster = document.getElementById("roster");
     roster.addEventListener("dragover", allowDrop);
     roster.addEventListener("drop", drop);
-
-    // Set the default value for the faction selection
-    document.getElementById("faction").value = ""; // Set the default value to 'SELECT'
-
-    // Generate unit cards from the array
-    for (let i = 0; i < unitCards.length; i++) {
-      const unitCardData = unitCards[i];
-      const unitCard = createUnitCard(unitCardData.name, unitCardData.points, unitCardData.faction);
-      unitCard.setAttribute("id", unitCardData.id);
-      document.body.insertBefore(unitCard, document.querySelector("script"));
-    }
-
-    const factionDropdown = document.getElementById("faction");
-    const factions = Array.from(new Set(unitCards.map((card) => card.faction)));
-    factionDropdown.innerHTML = factions
-      .map((faction) => `<option value="${faction}">${faction}</option>`)
-      .join("");
   </script>
 </body>
-
 </html>
